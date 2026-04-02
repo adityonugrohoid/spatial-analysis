@@ -37,15 +37,15 @@ Automated spatial analysis pipeline for architectural floor plan PDFs. Extracts 
 <tr>
 <td width="33%">
 <img src="docs/blueprint_only.png" alt="Blueprint View" width="100%">
-<p align="center"><em>Original PDF rendered at 3x with element groups sidebar and grouping controls.</em></p>
+<p align="center"><em>Original PDF rendered at 3x with element groups sidebar, grouping controls, and zoom/pan.</em></p>
 </td>
 <td width="33%">
 <img src="docs/blueprint_with_selected_mask.png" alt="Element Explorer" width="100%">
-<p align="center"><em>All 2,162 elements visible — color-coded by type. Toggle groups or individual elements.</em></p>
+<p align="center"><em>All elements visible — color-coded by type. Toggle groups or individual elements.</em></p>
 </td>
 <td width="33%">
-<img src="docs/selected_mask_only.png" alt="Wall Mask Export" width="100%">
-<p align="center"><em>Selected wall elements exported as binary mask for the CV annotation pipeline.</em></p>
+<img src="docs/selected_mask_only.png" alt="Selected Elements Export" width="100%">
+<p align="center"><em>Selected elements exported as PNG with original PDF colors for the CV pipeline.</em></p>
 </td>
 </tr>
 </table>
@@ -58,13 +58,13 @@ PDF Floor Plan
      ▼
 ┌─────────────────────┐
 │  Element Extraction  │  extract_floorplan.py
-│  (PyMuPDF)          │  Lines, fills, curves, text, rectangles
+│  (PyMuPDF)          │  Lines, fills, curves, text, images, tables
 └─────────┬───────────┘
           │
           ▼
 ┌─────────────────────┐
 │  Interactive Web App │  webapp/
-│  (FastAPI + Canvas)  │  Toggle elements, export wall mask + seeds
+│  (FastAPI + Canvas)  │  Toggle elements, zoom, pan, export
 └─────────┬───────────┘
           │
      ┌────┴────┐
@@ -81,11 +81,15 @@ PDF Floor Plan
 ### 1. Element Extraction (`src/extract_floorplan.py`)
 
 Parses PDF pages using PyMuPDF and classifies every drawing element:
-- **Lines** (1,565 elements) — walls, fixtures, annotations
-- **Fills** (171) — solid regions, counters, fixtures
+- **Lines** (1,565) — walls, fixtures, annotations
+- **Fills** (171) — solid regions, dimension breaks, arrowheads
 - **Curves** (235) — arcs, door swings
-- **Rectangles** (108) — windows, appliances
+- **Rectangles** (10) — stroked rectangles (fill-only rects filtered)
 - **Text** (80) — room labels, dimensions, fixture names
+- **Images** — embedded raster images with per-image CTM decomposition
+- **Tables** — detected table regions with row/column counts
+
+Handles rotated PDFs by normalizing page rotation to 0° before extraction.
 
 ```bash
 python src/extract_floorplan.py inputs/test-2.pdf
@@ -93,14 +97,17 @@ python src/extract_floorplan.py inputs/test-2.pdf
 
 ### 2. Interactive Web App (`webapp/`)
 
-Single-page app for visual element exploration and mask export:
+Single-page app for visual element exploration and export:
 
-- Upload any PDF floor plan
+- Upload any PDF floor plan (handles rotated pages automatically)
 - Toggle visibility per element group or individual element
-- Dynamic grouping by property (width, color, area) with configurable bin count
+- Dynamic grouping by property (width, color, area, font size) with configurable bin count
 - Rasterized PDF background at 3x resolution
-- **Export wall mask** — binary PNG of selected wall elements for CV pipeline
-- **Export seeds** — room label positions for watershed segmentation
+- Zoom (+/−/Fit) and click-drag pan navigation
+- Embedded image rendering with per-image CTM rotation and flip
+- **Export JSON** — selected elements with both pt and px coordinates
+- **Export PNG (Selected Elements)** — faithful reconstruction using original PDF colors
+- **Export PNG (Blueprint)** — rasterized PDF background with selected element overlay
 
 ```bash
 uvicorn webapp.server:app --port 8000
