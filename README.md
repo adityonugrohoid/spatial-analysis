@@ -6,6 +6,40 @@ Automated spatial analysis pipeline for architectural floor plan PDFs. Extracts 
 
 **Web App**: [boon-explorer](https://boon-explorer-486319900424.asia-southeast1.run.app) — Upload a PDF floor plan, toggle element visibility, adjust groupings, and export wall masks for the CV pipeline.
 
+## Results
+
+<table>
+<tr>
+<td width="50%">
+<img src="outputs/test-2_annotated_walls.png" alt="Wall Annotations" width="100%">
+<p align="center"><em>Dimension lines with ISO 128 placement on faded PDF base. Adaptive wall detection calibrated at 23.33 px/ft from enclosed rooms.</em></p>
+</td>
+<td width="50%">
+<img src="outputs/test-2_room_polygons.png" alt="Room Polygons" width="100%">
+<p align="center"><em>16 room polygons with computed areas. Total interior: 2,073.8 sqft. GeoJSON output for downstream GIS integration.</em></p>
+</td>
+</tr>
+</table>
+
+## Web App
+
+<table>
+<tr>
+<td width="33%">
+<img src="docs/blueprint_only.png" alt="Blueprint View" width="100%">
+<p align="center"><em>Original PDF rendered at 3x with element groups sidebar and grouping controls.</em></p>
+</td>
+<td width="33%">
+<img src="docs/blueprint_with_selected_mask.png" alt="Element Explorer" width="100%">
+<p align="center"><em>All 2,162 elements visible — color-coded by type. Toggle groups or individual elements.</em></p>
+</td>
+<td width="33%">
+<img src="docs/selected_mask_only.png" alt="Wall Mask Export" width="100%">
+<p align="center"><em>Selected wall elements exported as binary mask for the CV annotation pipeline.</em></p>
+</td>
+</tr>
+</table>
+
 ## Pipeline Overview
 
 ```
@@ -68,7 +102,7 @@ docker build -t spatial-analysis . && docker run -p 8000:8000 spatial-analysis
 
 Generates dimension-line annotated floor plans following ISO 128 / ANSI Y14.5:
 
-- **Adaptive wall detection** — band scanning (5–80px) with expected-distance validation finds wall boundaries from exported mask
+- **Adaptive wall detection** — band scanning (5-80px) with expected-distance validation finds wall boundaries from exported mask
 - **Multi-room calibration** — pixels-per-foot derived from enclosed rooms (BEDROOM, BEDROOM 2, OFFICE) with robust median and outlier rejection
 - **Per-room placement** — explicit placement table controls dimension line position (outside, inside/negative offset) per room
 - **Room schedule** — summary table with stated dimensions and computed areas
@@ -91,15 +125,6 @@ Segments the floor plan into rooms using gradient-based watershed:
 ```bash
 python src/watershed_rooms.py inputs/test-2_mask_20260402_181715.png
 ```
-
-## Sample Outputs
-
-| Output | Description |
-|--------|-------------|
-| `test-2_annotated_walls.png` | Dimension lines on faded PDF base |
-| `test-2_room_polygons.png` | Color-coded room polygons with areas |
-| `test-2_annotated_walls.json` | Wall boundaries, calibration data |
-| `test-2_room_polygons.json` | GeoJSON room polygons |
 
 ## Tech Stack
 
