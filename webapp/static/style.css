@@ -52,8 +52,9 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 /* ── Canvas area ─────────────────────────────────────────── */
 #canvas-wrap {
   flex: 1; position: relative; overflow: auto;
-  background: #e8e8ec;
+  background: #e8e8ec; cursor: grab;
 }
+#canvas-wrap:active { cursor: grabbing; }
 #canvas-container {
   position: relative; padding: 8px; display: inline-block;
 }
