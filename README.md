@@ -33,22 +33,8 @@ Automated spatial analysis pipeline for architectural floor plan PDFs. Extracts 
 
 ## Web App
 
-<table>
-<tr>
-<td width="33%">
-<img src="docs/blueprint_only.png" alt="Blueprint View" width="100%">
-<p align="center"><em>Original PDF rendered at 3x with element groups sidebar, grouping controls, and zoom/pan.</em></p>
-</td>
-<td width="33%">
-<img src="docs/blueprint_with_selected_mask.png" alt="Element Explorer" width="100%">
-<p align="center"><em>All elements visible — color-coded by type. Toggle groups or individual elements.</em></p>
-</td>
-<td width="33%">
-<img src="docs/selected_mask_only.png" alt="Selected Elements Export" width="100%">
-<p align="center"><em>Selected elements exported as PNG with original PDF colors for the CV pipeline.</em></p>
-</td>
-</tr>
-</table>
+<img src="docs/blueprint_with_selected_mask.png" alt="Web App — PDF Element Explorer" width="100%">
+<p align="center"><em>Upload any PDF floor plan — toggle element groups, adjust grouping by property, zoom and pan, export selected elements as JSON or PNG.</em></p>
 
 ## Pipeline Overview
 
