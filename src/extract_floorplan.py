@@ -10,10 +10,12 @@ Outputs structured JSON and per-group debug PNG visualizations for both.
 import argparse
 import json
 import logging
+import math
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import base64
 import fitz  # PyMuPDF
 import numpy as np
 import cv2
@@ -406,6 +408,14 @@ def extract_raw_types(pdf_path: Path) -> dict:
     start = time.time()
     doc = fitz.open(str(pdf_path))
     page = doc[0]
+
+    # Normalize rotation: store original, then derotate so all coordinate
+    # spaces (drawings, text, pixmap) align without manual transforms.
+    original_rotation = page.rotation
+    if original_rotation != 0:
+        logger.info("[raw] Page rotation detected: %d° — normalizing to 0°", original_rotation)
+        page.set_rotation(0)
+
     page_w, page_h = page.rect.width, page.rect.height
 
     raw_groups: dict[str, list[dict]] = {
@@ -422,6 +432,8 @@ def extract_raw_types(pdf_path: Path) -> dict:
     drawings = page.get_drawings()
     logger.info("[raw] Processing %d drawing items", len(drawings))
 
+    page_area = page_w * page_h
+
     for d in drawings:
         color = _rgb_float_to_int(d.get("color"))
         fill = d.get("fill")
@@ -429,8 +441,13 @@ def extract_raw_types(pdf_path: Path) -> dict:
         fill_rgb = _rgb_float_to_int(fill) if has_fill else None
         width = d.get("width") or 0
 
-        # If shape has a fill, add to fills group (the shape as a whole)
+        # If shape has a fill, add to fills group (skip page-wide backgrounds)
         if has_fill:
+            # Filter out fills covering >90% of page area (background layers)
+            r = d.get("rect")
+            if r and (r.width * r.height) > page_area * 0.9:
+                logger.debug("[raw] Skipping page-wide fill: %s", r)
+                continue
             points = _drawing_to_points(d)
             if points:
                 elem = {
@@ -473,18 +490,21 @@ def extract_raw_types(pdf_path: Path) -> dict:
                 })
 
             elif op == "re":
-                rect = item[1]
-                raw_groups["rectangles"].append({
-                    "type": "rectangle",
-                    "color": color,
-                    "points": [
-                        {"x": round(rect.x0, 2), "y": round(rect.y0, 2)},
-                        {"x": round(rect.x1, 2), "y": round(rect.y0, 2)},
-                        {"x": round(rect.x1, 2), "y": round(rect.y1, 2)},
-                        {"x": round(rect.x0, 2), "y": round(rect.y1, 2)},
-                    ],
-                    "width": round(width, 2),
-                })
+                # Only add stroked rectangles; fill-only rects are
+                # already captured in the fills group
+                if d.get("color") is not None:
+                    rect = item[1]
+                    raw_groups["rectangles"].append({
+                        "type": "rectangle",
+                        "color": color,
+                        "points": [
+                            {"x": round(rect.x0, 2), "y": round(rect.y0, 2)},
+                            {"x": round(rect.x1, 2), "y": round(rect.y0, 2)},
+                            {"x": round(rect.x1, 2), "y": round(rect.y1, 2)},
+                            {"x": round(rect.x0, 2), "y": round(rect.y1, 2)},
+                        ],
+                        "width": round(width, 2),
+                    })
 
             elif op == "qu":
                 quad = item[1]
@@ -506,6 +526,8 @@ def extract_raw_types(pdf_path: Path) -> dict:
         if block["type"] == 0:
             # Text block
             for line in block["lines"]:
+                line_dir = line.get("dir", (1.0, 0.0))
+                text_angle = round(math.degrees(math.atan2(line_dir[1], line_dir[0])), 1)
                 for span in line["spans"]:
                     t = span["text"].strip()
                     if not t:
@@ -515,6 +537,7 @@ def extract_raw_types(pdf_path: Path) -> dict:
                     r = (c >> 16) & 0xFF
                     g = (c >> 8) & 0xFF
                     b = c & 0xFF
+                    origin = span.get("origin", (bbox[0], bbox[3]))
                     raw_groups["text"].append({
                         "type": "text",
                         "color": [r, g, b],
@@ -524,12 +547,33 @@ def extract_raw_types(pdf_path: Path) -> dict:
                         ],
                         "label": t,
                         "font_size": round(span["size"], 1),
+                        "text_dir": [round(line_dir[0], 4), round(line_dir[1], 4)],
+                        "text_angle": text_angle,
+                        "origin": {"x": round(origin[0], 2), "y": round(origin[1], 2)},
                     })
         elif block["type"] == 1:
-            # Image block
+            # Image block — extract actual image bytes as base64
             bbox = block["bbox"]
             img_w = block.get("width", 0)
             img_h = block.get("height", 0)
+            img_bytes = block.get("image", b"")
+            img_ext = block.get("ext", "png")
+            mime = {"png": "image/png", "jpeg": "image/jpeg",
+                    "jpg": "image/jpeg", "jxr": "image/jxr",
+                    "jpx": "image/jpx", "bmp": "image/bmp"}.get(img_ext, f"image/{img_ext}")
+            img_data_uri = f"data:{mime};base64,{base64.b64encode(img_bytes).decode('ascii')}" if img_bytes else ""
+            # Decompose CTM into rotation + flip
+            # CTM = (a, b, c, d, e, f): det(a*d - b*c) < 0 means reflection
+            ctm = block.get("transform", (1, 0, 0, 1, 0, 0))
+            a, b, c, d = ctm[0], ctm[1], ctm[2], ctm[3]
+            det = a * d - b * c
+            if det < 0:
+                # Reflection: factor out h-flip, compute remaining rotation
+                img_rotation = round(math.degrees(math.atan2(-b, -a)), 1)
+                img_flip_h = True
+            else:
+                img_rotation = round(math.degrees(math.atan2(b, a)), 1)
+                img_flip_h = False
             raw_groups["images"].append({
                 "type": "image",
                 "color": [128, 128, 128],
@@ -540,6 +584,9 @@ def extract_raw_types(pdf_path: Path) -> dict:
                 "label": f"IMG {img_w}x{img_h}",
                 "img_width": img_w,
                 "img_height": img_h,
+                "image_data": img_data_uri,
+                "img_rotation": img_rotation,
+                "img_flip_h": img_flip_h,
             })
 
     # Extract tables
@@ -567,6 +614,7 @@ def extract_raw_types(pdf_path: Path) -> dict:
     result = {
         "source": str(pdf_path),
         "page_size": {"width": round(page_w, 2), "height": round(page_h, 2), "unit": "pt"},
+        "page_rotation": original_rotation,
         "classification": "raw_pdf_element_types",
         "groups": [],
     }

@@ -26,6 +26,9 @@ SCALE_FACTOR = 3
 def rasterize_page(pdf_path: Path) -> str:
     """Render the first page of a PDF at 3x resolution as a base64 PNG.
 
+    Normalizes page rotation to 0° before rasterizing so the pixmap
+    aligns with the derotated coordinate space used by extract_raw_types().
+
     Args:
         pdf_path: Path to the PDF file.
 
@@ -34,6 +37,9 @@ def rasterize_page(pdf_path: Path) -> str:
     """
     doc = fitz.open(str(pdf_path))
     page = doc[0]
+    if page.rotation != 0:
+        logger.info("Normalizing page rotation %d° -> 0° for rasterization", page.rotation)
+        page.set_rotation(0)
     mat = fitz.Matrix(SCALE_FACTOR, SCALE_FACTOR)
     pix = page.get_pixmap(matrix=mat)
     png_bytes = pix.tobytes("png")

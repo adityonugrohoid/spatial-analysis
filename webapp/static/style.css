@@ -52,15 +52,17 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 /* ── Canvas area ─────────────────────────────────────────── */
 #canvas-wrap {
   flex: 1; position: relative; overflow: auto;
-  background: #e8e8ec; display: flex; align-items: center; justify-content: center;
+  background: #e8e8ec;
 }
 #canvas-container {
-  position: relative; max-width: 100%; max-height: 100%; padding: 8px;
+  position: relative; padding: 8px; display: inline-block;
 }
 #canvas {
-  display: block; max-width: 100%; max-height: calc(100vh - 60px);
+  display: block;
   background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.15);
 }
+.toolbar-sep { display: inline-block; width: 1px; height: 20px; background: #ccc; margin: 0 6px; vertical-align: middle; }
+#zoom-level { font-size: 12px; min-width: 40px; text-align: center; display: inline-block; }
 #drop-overlay {
   display: none; position: absolute; inset: 0;
   background: rgba(37, 99, 235, 0.15); border: 3px dashed #2563eb;
