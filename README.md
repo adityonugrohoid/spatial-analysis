@@ -24,13 +24,9 @@ Automated spatial analysis pipeline for architectural floor plan PDFs. Extracts 
 </td>
 </tr>
 <tr>
-<td width="50%" colspan="2">
+<td colspan="3">
 <img src="outputs/test-2_annotated_walls.png" alt="Wall Annotations" width="100%">
-<p align="center"><em>Dimension lines with ISO 128 placement on faded PDF base. Adaptive wall detection calibrated at 23.33 px/ft from enclosed rooms.</em></p>
-</td>
-<td width="50%">
-<img src="outputs/test-2_room_polygons.png" alt="Room Polygons" width="100%">
-<p align="center"><em>16 room polygons with computed areas. Total interior: 2,073.8 sqft. GeoJSON output for downstream GIS integration.</em></p>
+<p align="center"><em>Final output — ISO 128 dimension lines with adaptive wall detection calibrated at 23.33 px/ft. Per-room placement with outside and negative (inside) offsets. Room schedule with 16 rooms, 2,073.8 sqft total interior.</em></p>
 </td>
 </tr>
 </table>
