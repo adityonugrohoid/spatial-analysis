@@ -415,6 +415,8 @@ def extract_raw_types(pdf_path: Path) -> dict:
         "quads": [],
         "fills": [],
         "text": [],
+        "images": [],
+        "tables": [],
     }
 
     drawings = page.get_drawings()
@@ -498,31 +500,66 @@ def extract_raw_types(pdf_path: Path) -> dict:
                     "width": round(width, 2),
                 })
 
-    # Extract text
+    # Extract text and images from page content
     text_dict = page.get_text("dict")
     for block in text_dict.get("blocks", []):
-        if block["type"] != 0:
-            continue
-        for line in block["lines"]:
-            for span in line["spans"]:
-                t = span["text"].strip()
-                if not t:
-                    continue
-                bbox = span["bbox"]
-                c = span["color"]
-                r = (c >> 16) & 0xFF
-                g = (c >> 8) & 0xFF
-                b = c & 0xFF
-                raw_groups["text"].append({
-                    "type": "text",
-                    "color": [r, g, b],
-                    "points": [
-                        {"x": round(bbox[0], 2), "y": round(bbox[1], 2)},
-                        {"x": round(bbox[2], 2), "y": round(bbox[3], 2)},
-                    ],
-                    "label": t,
-                    "font_size": round(span["size"], 1),
-                })
+        if block["type"] == 0:
+            # Text block
+            for line in block["lines"]:
+                for span in line["spans"]:
+                    t = span["text"].strip()
+                    if not t:
+                        continue
+                    bbox = span["bbox"]
+                    c = span["color"]
+                    r = (c >> 16) & 0xFF
+                    g = (c >> 8) & 0xFF
+                    b = c & 0xFF
+                    raw_groups["text"].append({
+                        "type": "text",
+                        "color": [r, g, b],
+                        "points": [
+                            {"x": round(bbox[0], 2), "y": round(bbox[1], 2)},
+                            {"x": round(bbox[2], 2), "y": round(bbox[3], 2)},
+                        ],
+                        "label": t,
+                        "font_size": round(span["size"], 1),
+                    })
+        elif block["type"] == 1:
+            # Image block
+            bbox = block["bbox"]
+            img_w = block.get("width", 0)
+            img_h = block.get("height", 0)
+            raw_groups["images"].append({
+                "type": "image",
+                "color": [128, 128, 128],
+                "points": [
+                    {"x": round(bbox[0], 2), "y": round(bbox[1], 2)},
+                    {"x": round(bbox[2], 2), "y": round(bbox[3], 2)},
+                ],
+                "label": f"IMG {img_w}x{img_h}",
+                "img_width": img_w,
+                "img_height": img_h,
+            })
+
+    # Extract tables
+    try:
+        tables = page.find_tables()
+        for t in tables.tables:
+            bbox = t.bbox
+            raw_groups["tables"].append({
+                "type": "table",
+                "color": [64, 128, 64],
+                "points": [
+                    {"x": round(bbox[0], 2), "y": round(bbox[1], 2)},
+                    {"x": round(bbox[2], 2), "y": round(bbox[3], 2)},
+                ],
+                "label": f"TABLE {t.row_count}x{t.col_count}",
+                "rows": t.row_count,
+                "cols": t.col_count,
+            })
+    except Exception:
+        pass  # find_tables not available in older PyMuPDF
 
     doc.close()
     elapsed = time.time() - start

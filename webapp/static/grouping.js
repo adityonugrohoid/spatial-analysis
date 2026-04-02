@@ -58,11 +58,22 @@ const Grouping = (() => {
       text_len:  { extract: e => (e.label || '').length,   type: 'numeric',  label: 'Text Length' },
       bbox_area: { extract: e => bboxArea(e),              type: 'numeric',  label: 'BBox Area (pt\u00B2)' },
     },
+    images: {
+      bbox_area:  { extract: e => bboxArea(e),             type: 'numeric',  label: 'Area (pt\u00B2)' },
+      img_width:  { extract: e => e.img_width || 0,        type: 'numeric',  label: 'Image Width (px)' },
+      img_height: { extract: e => e.img_height || 0,       type: 'numeric',  label: 'Image Height (px)' },
+    },
+    tables: {
+      bbox_area: { extract: e => bboxArea(e),              type: 'numeric',  label: 'Area (pt\u00B2)' },
+      rows:      { extract: e => e.rows || 0,              type: 'numeric',  label: 'Row Count' },
+      cols:      { extract: e => e.cols || 0,              type: 'numeric',  label: 'Column Count' },
+    },
   };
 
   const DEFAULT_FIELD = {
     lines: 'width', curves: 'width', rectangles: 'area',
     quads: 'area', fills: 'fill_color', text: 'font_size',
+    images: 'bbox_area', tables: 'bbox_area',
   };
 
   // ── Geometry helpers ──────────────────────────────────────

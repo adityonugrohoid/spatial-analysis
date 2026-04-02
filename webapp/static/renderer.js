@@ -17,7 +17,7 @@ const Renderer = (() => {
 
   // Draw order: fills first, then strokes thin-to-thick
   const STROKE_ORDER = [
-    'lines', 'curves', 'rectangles', 'quads', 'text',
+    'lines', 'curves', 'rectangles', 'quads', 'text', 'images', 'tables',
   ];
 
   function init(canvasEl) {
@@ -217,6 +217,42 @@ const Renderer = (() => {
           ctx.fillStyle = color;
           ctx.font = `${fontSize}px sans-serif`;
           ctx.fillText(elem.label, x1, y2 - 2);
+        }
+        break;
+      }
+
+      case 'image': {
+        const ix1 = pxPts[0][0], iy1 = pxPts[0][1];
+        const ix2 = pxPts[1][0], iy2 = pxPts[1][1];
+        ctx.strokeStyle = 'rgba(128, 0, 128, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([6, 3]);
+        ctx.strokeRect(ix1, iy1, ix2 - ix1, iy2 - iy1);
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(128, 0, 128, 0.1)';
+        ctx.fillRect(ix1, iy1, ix2 - ix1, iy2 - iy1);
+        if (elem.label) {
+          ctx.fillStyle = 'rgba(128, 0, 128, 0.8)';
+          ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
+          ctx.fillText(elem.label, ix1 + 4, iy1 + 14);
+        }
+        break;
+      }
+
+      case 'table': {
+        const tx1 = pxPts[0][0], ty1 = pxPts[0][1];
+        const tx2 = pxPts[1][0], ty2 = pxPts[1][1];
+        ctx.strokeStyle = 'rgba(0, 128, 64, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(0, 128, 64, 0.1)';
+        ctx.fillRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
+        if (elem.label) {
+          ctx.fillStyle = 'rgba(0, 128, 64, 0.8)';
+          ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
+          ctx.fillText(elem.label, tx1 + 4, ty1 + 14);
         }
         break;
       }
