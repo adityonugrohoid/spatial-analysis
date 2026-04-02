@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Element Explorer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <div class="toolbar-left">
+      <label class="btn btn-primary" id="upload-btn">
+        Upload PDF
+        <input type="file" id="file-input" accept=".pdf" hidden>
+      </label>
+      <button class="btn" id="blueprint-btn" disabled>Blueprint: ON</button>
+      <div class="dropdown" id="export-dropdown">
+        <button class="btn" id="export-btn" disabled>Export &#9662;</button>
+        <div class="dropdown-menu">
+          <button id="export-json">Export JSON</button>
+          <button id="export-png-elements">Export PNG (Elements Only)</button>
+          <button id="export-png-blueprint">Export PNG (With Blueprint)</button>
+          <button id="export-mask">Export Wall Mask</button>
+        </div>
+      </div>
+      <button class="btn" id="reset-btn" disabled>Reset</button>
+    </div>
+    <div class="toolbar-right">
+      <span id="status-text">No PDF loaded</span>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div id="main">
+    <!-- Canvas area -->
+    <div id="canvas-wrap">
+      <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div id="drop-overlay">Drop PDF here</div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <span class="sidebar-title">Element Groups</span>
+        <div class="sidebar-actions">
+          <button class="btn-sm" id="select-all-btn" disabled>All</button>
+          <button class="btn-sm" id="select-none-btn" disabled>None</button>
+        </div>
+      </div>
+      <div id="group-tree"></div>
+      <div id="grouping-controls">
+        <div class="section-title">Grouping Controls</div>
+        <div id="grouping-panels"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/grouping.js"></script>
+  <script src="/static/renderer.js"></script>
+  <script src="/static/ui.js"></script>
+  <script src="/static/export.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

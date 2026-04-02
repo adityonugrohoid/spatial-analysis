@@ -1,0 +1,909 @@
+{
+  "source": "test-2.pdf",
+  "mask": "test-2_mask_20260402_205333.png",
+  "page_size_pt": {
+    "width": 792.0,
+    "height": 612.0
+  },
+  "scale_factor": 3,
+  "pixels_per_foot": 23.33,
+  "rooms": [
+    {
+      "name": "BREAKFAST NOOK",
+      "dimensions": "6'6\" X 6'0\"",
+      "width_ft": 6.5,
+      "height_ft": 6.0,
+      "area_sqft": 39.0,
+      "walls_px": {
+        "left": 864,
+        "right": 1015,
+        "top": 521,
+        "bottom": 660
+      },
+      "span_px": {
+        "width": 151,
+        "height": 139
+      },
+      "walls_pt": {
+        "left": 288.0,
+        "right": 338.3,
+        "top": 173.7,
+        "bottom": 220.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1015.0,
+              521.0
+            ],
+            [
+              1015.0,
+              660.0
+            ],
+            [
+              864.0,
+              660.0
+            ],
+            [
+              864.0,
+              521.0
+            ],
+            [
+              1015.0,
+              521.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "LIVING ROOM",
+      "dimensions": "16'6\" X 21'0\"",
+      "width_ft": 16.5,
+      "height_ft": 21.0,
+      "area_sqft": 346.5,
+      "walls_px": {
+        "left": 1147,
+        "right": 1532,
+        "top": 521,
+        "bottom": 1029
+      },
+      "span_px": {
+        "width": 385,
+        "height": 508
+      },
+      "walls_pt": {
+        "left": 382.3,
+        "right": 510.7,
+        "top": 173.7,
+        "bottom": 343.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1532.0,
+              521.0
+            ],
+            [
+              1532.0,
+              1029.0
+            ],
+            [
+              1147.0,
+              1029.0
+            ],
+            [
+              1147.0,
+              521.0
+            ],
+            [
+              1532.0,
+              521.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "DINING ROOM",
+      "dimensions": "11'0\" X 10'0\"",
+      "width_ft": 11.0,
+      "height_ft": 10.0,
+      "area_sqft": 110.0,
+      "walls_px": {
+        "left": 1109,
+        "right": 1373,
+        "top": 1052,
+        "bottom": 1286
+      },
+      "span_px": {
+        "width": 264,
+        "height": 234
+      },
+      "walls_pt": {
+        "left": 369.7,
+        "right": 457.7,
+        "top": 350.7,
+        "bottom": 428.7
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1373.0,
+              1052.0
+            ],
+            [
+              1373.0,
+              1286.0
+            ],
+            [
+              1109.0,
+              1286.0
+            ],
+            [
+              1109.0,
+              1052.0
+            ],
+            [
+              1373.0,
+              1052.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "MASTER BDRM",
+      "dimensions": "13'6\" X 15'6\"",
+      "width_ft": 13.5,
+      "height_ft": 15.5,
+      "area_sqft": 209.25,
+      "walls_px": {
+        "left": 1550,
+        "right": 1875,
+        "top": 215,
+        "bottom": 591
+      },
+      "span_px": {
+        "width": 325,
+        "height": 376
+      },
+      "walls_pt": {
+        "left": 516.7,
+        "right": 625.0,
+        "top": 71.7,
+        "bottom": 197.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1875.0,
+              215.0
+            ],
+            [
+              1875.0,
+              591.0
+            ],
+            [
+              1550.0,
+              591.0
+            ],
+            [
+              1550.0,
+              215.0
+            ],
+            [
+              1875.0,
+              215.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "MASTER BATH",
+      "dimensions": "5'0\" X 16'6\"",
+      "width_ft": 5.0,
+      "height_ft": 16.5,
+      "area_sqft": 82.5,
+      "walls_px": {
+        "left": 1709,
+        "right": 1826,
+        "top": 689,
+        "bottom": 1006
+      },
+      "span_px": {
+        "width": 117,
+        "height": 317
+      },
+      "walls_pt": {
+        "left": 569.7,
+        "right": 608.7,
+        "top": 229.7,
+        "bottom": 335.3
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1826.0,
+              689.0
+            ],
+            [
+              1826.0,
+              1006.0
+            ],
+            [
+              1709.0,
+              1006.0
+            ],
+            [
+              1709.0,
+              689.0
+            ],
+            [
+              1826.0,
+              689.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "PATIO",
+      "dimensions": "27'6\" X 12'0\"",
+      "width_ft": 27.5,
+      "height_ft": 12.0,
+      "area_sqft": 330.0,
+      "walls_px": {
+        "left": 865,
+        "right": 1532,
+        "top": 215,
+        "bottom": 500
+      },
+      "span_px": {
+        "width": 667,
+        "height": 285
+      },
+      "walls_pt": {
+        "left": 288.3,
+        "right": 510.7,
+        "top": 71.7,
+        "bottom": 166.7
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1532.0,
+              215.0
+            ],
+            [
+              1532.0,
+              500.0
+            ],
+            [
+              865.0,
+              500.0
+            ],
+            [
+              865.0,
+              215.0
+            ],
+            [
+              1532.0,
+              215.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BEDROOM",
+      "dimensions": "12'0\" X 12'0\"",
+      "width_ft": 12.0,
+      "height_ft": 12.0,
+      "area_sqft": 144.0,
+      "walls_px": {
+        "left": 558,
+        "right": 846,
+        "top": 288,
+        "bottom": 576
+      },
+      "span_px": {
+        "width": 288,
+        "height": 288
+      },
+      "walls_pt": {
+        "left": 186.0,
+        "right": 282.0,
+        "top": 96.0,
+        "bottom": 192.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              846.0,
+              288.0
+            ],
+            [
+              846.0,
+              576.0
+            ],
+            [
+              558.0,
+              576.0
+            ],
+            [
+              558.0,
+              288.0
+            ],
+            [
+              846.0,
+              288.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BEDROOM 2",
+      "dimensions": "12'0\" X 11'6\"",
+      "width_ft": 12.0,
+      "height_ft": 11.5,
+      "area_sqft": 138.0,
+      "walls_px": {
+        "left": 252,
+        "right": 540,
+        "top": 668,
+        "bottom": 944
+      },
+      "span_px": {
+        "width": 288,
+        "height": 276
+      },
+      "walls_pt": {
+        "left": 84.0,
+        "right": 180.0,
+        "top": 222.7,
+        "bottom": 314.7
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              540.0,
+              668.0
+            ],
+            [
+              540.0,
+              944.0
+            ],
+            [
+              252.0,
+              944.0
+            ],
+            [
+              252.0,
+              668.0
+            ],
+            [
+              540.0,
+              668.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BATHROOM",
+      "dimensions": "4'6\" X 8'0\"",
+      "width_ft": 4.5,
+      "height_ft": 8.0,
+      "area_sqft": 36.0,
+      "walls_px": {
+        "left": 692,
+        "right": 798,
+        "top": 755,
+        "bottom": 944
+      },
+      "span_px": {
+        "width": 106,
+        "height": 189
+      },
+      "walls_pt": {
+        "left": 230.7,
+        "right": 266.0,
+        "top": 251.7,
+        "bottom": 314.7
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              798.0,
+              755.0
+            ],
+            [
+              798.0,
+              944.0
+            ],
+            [
+              692.0,
+              944.0
+            ],
+            [
+              692.0,
+              755.0
+            ],
+            [
+              798.0,
+              755.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "KITCHEN",
+      "dimensions": "5'6\" X 15'6\"",
+      "width_ft": 5.5,
+      "height_ft": 15.5,
+      "area_sqft": 85.25,
+      "walls_px": {
+        "left": 913,
+        "right": 1042,
+        "top": 743,
+        "bottom": 1102
+      },
+      "span_px": {
+        "width": 129,
+        "height": 359
+      },
+      "walls_pt": {
+        "left": 304.3,
+        "right": 347.3,
+        "top": 247.7,
+        "bottom": 367.3
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1042.0,
+              743.0
+            ],
+            [
+              1042.0,
+              1102.0
+            ],
+            [
+              913.0,
+              1102.0
+            ],
+            [
+              913.0,
+              743.0
+            ],
+            [
+              1042.0,
+              743.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "CLOSET",
+      "dimensions": "5'0\" X 9'0\"",
+      "width_ft": 5.0,
+      "height_ft": 9.0,
+      "area_sqft": 45.0,
+      "walls_px": {
+        "left": 1574,
+        "right": 1691,
+        "top": 766,
+        "bottom": 975
+      },
+      "span_px": {
+        "width": 117,
+        "height": 209
+      },
+      "walls_pt": {
+        "left": 524.7,
+        "right": 563.7,
+        "top": 255.3,
+        "bottom": 325.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1691.0,
+              766.0
+            ],
+            [
+              1691.0,
+              975.0
+            ],
+            [
+              1574.0,
+              975.0
+            ],
+            [
+              1574.0,
+              766.0
+            ],
+            [
+              1691.0,
+              766.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "GARAGE",
+      "dimensions": "24'6\" X 23'6\"",
+      "width_ft": 24.5,
+      "height_ft": 23.5,
+      "area_sqft": 575.75,
+      "walls_px": {
+        "left": 253,
+        "right": 846,
+        "top": 962,
+        "bottom": 1544
+      },
+      "span_px": {
+        "width": 593,
+        "height": 582
+      },
+      "walls_pt": {
+        "left": 84.3,
+        "right": 282.0,
+        "top": 320.7,
+        "bottom": 514.7
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              846.0,
+              962.0
+            ],
+            [
+              846.0,
+              1544.0
+            ],
+            [
+              253.0,
+              1544.0
+            ],
+            [
+              253.0,
+              962.0
+            ],
+            [
+              846.0,
+              962.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "FOYER",
+      "dimensions": "6'0\" X 6'0\"",
+      "width_ft": 6.0,
+      "height_ft": 6.0,
+      "area_sqft": 36.0,
+      "walls_px": {
+        "left": 1390,
+        "right": 1532,
+        "top": 1049,
+        "bottom": 1189
+      },
+      "span_px": {
+        "width": 142,
+        "height": 140
+      },
+      "walls_pt": {
+        "left": 463.3,
+        "right": 510.7,
+        "top": 349.7,
+        "bottom": 396.3
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1532.0,
+              1049.0
+            ],
+            [
+              1532.0,
+              1189.0
+            ],
+            [
+              1390.0,
+              1189.0
+            ],
+            [
+              1390.0,
+              1049.0
+            ],
+            [
+              1532.0,
+              1049.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "LAUNDRY",
+      "dimensions": "4'0\" X 9'6\"",
+      "width_ft": 4.0,
+      "height_ft": 9.5,
+      "area_sqft": 38.0,
+      "walls_px": {
+        "left": 914,
+        "right": 1018,
+        "top": 1122,
+        "bottom": 1347
+      },
+      "span_px": {
+        "width": 104,
+        "height": 225
+      },
+      "walls_pt": {
+        "left": 304.7,
+        "right": 339.3,
+        "top": 374.0,
+        "bottom": 449.0
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1018.0,
+              1122.0
+            ],
+            [
+              1018.0,
+              1347.0
+            ],
+            [
+              914.0,
+              1347.0
+            ],
+            [
+              914.0,
+              1122.0
+            ],
+            [
+              1018.0,
+              1122.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "OFFICE",
+      "dimensions": "12'6\" X 12'0\"",
+      "width_ft": 12.5,
+      "height_ft": 12.0,
+      "area_sqft": 150.0,
+      "walls_px": {
+        "left": 1622,
+        "right": 1875,
+        "top": 1121,
+        "bottom": 1408
+      },
+      "span_px": {
+        "width": 253,
+        "height": 287
+      },
+      "walls_pt": {
+        "left": 540.7,
+        "right": 625.0,
+        "top": 373.7,
+        "bottom": 469.3
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1875.0,
+              1121.0
+            ],
+            [
+              1875.0,
+              1408.0
+            ],
+            [
+              1622.0,
+              1408.0
+            ],
+            [
+              1622.0,
+              1121.0
+            ],
+            [
+              1875.0,
+              1121.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "ENTRY",
+      "dimensions": "7'0\" X 5'6\"",
+      "width_ft": 7.0,
+      "height_ft": 5.5,
+      "area_sqft": 38.5,
+      "walls_px": {
+        "left": 1390,
+        "right": 1553,
+        "top": 1206,
+        "bottom": 1348
+      },
+      "span_px": {
+        "width": 163,
+        "height": 142
+      },
+      "walls_pt": {
+        "left": 463.3,
+        "right": 517.7,
+        "top": 402.0,
+        "bottom": 449.3
+      },
+      "polygon_geojson": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              1553.0,
+              1206.0
+            ],
+            [
+              1553.0,
+              1348.0
+            ],
+            [
+              1390.0,
+              1348.0
+            ],
+            [
+              1390.0,
+              1206.0
+            ],
+            [
+              1553.0,
+              1206.0
+            ]
+          ]
+        ]
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": true,
+        "bottom": true
+      }
+    }
+  ],
+  "total_interior_sqft": 2073.8
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+outputs/
+outputs copy/
+inputs/
+*.png
+*.pdf
+*.pyc
+.git/
+CLAUDE.md
+PROGRESS.md

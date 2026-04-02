@@ -1,0 +1,446 @@
+{
+  "source": "test-2_mask_20260402_205333.png",
+  "blueprint": "test-2_blueprint_20260402_205331.png",
+  "page_size_pt": {
+    "width": 792.0,
+    "height": 612.0
+  },
+  "scale_factor": 3,
+  "pixels_per_foot": 23.33,
+  "rooms": [
+    {
+      "name": "BREAKFAST NOOK",
+      "dimensions": "6'6\" X 6'0\"",
+      "width_ft": 6.5,
+      "height_ft": 6.0,
+      "area_sqft": 39.0,
+      "label_pt": {
+        "x": 316.8,
+        "y": 183.7
+      },
+      "walls_px": {
+        "left": 864,
+        "right": 1015,
+        "top": 521,
+        "bottom": 660
+      },
+      "span_px": {
+        "width": 151,
+        "height": 139
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "LIVING ROOM",
+      "dimensions": "16'6\" X 21'0\"",
+      "width_ft": 16.5,
+      "height_ft": 21.0,
+      "area_sqft": 346.5,
+      "label_pt": {
+        "x": 439.3,
+        "y": 199.0
+      },
+      "walls_px": {
+        "left": 1147,
+        "right": 1532,
+        "top": 521,
+        "bottom": 1029
+      },
+      "span_px": {
+        "width": 385,
+        "height": 508
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "DINING ROOM",
+      "dimensions": "11'0\" X 10'0\"",
+      "width_ft": 11.0,
+      "height_ft": 10.0,
+      "area_sqft": 110.0,
+      "label_pt": {
+        "x": 415.3,
+        "y": 362.8
+      },
+      "walls_px": {
+        "left": 1109,
+        "right": 1373,
+        "top": 1052,
+        "bottom": 1286
+      },
+      "span_px": {
+        "width": 264,
+        "height": 234
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "MASTER BDRM",
+      "dimensions": "13'6\" X 15'6\"",
+      "width_ft": 13.5,
+      "height_ft": 15.5,
+      "area_sqft": 209.25,
+      "label_pt": {
+        "x": 571.1,
+        "y": 89.5
+      },
+      "walls_px": {
+        "left": 1550,
+        "right": 1875,
+        "top": 215,
+        "bottom": 591
+      },
+      "span_px": {
+        "width": 325,
+        "height": 376
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "MASTER BATH",
+      "dimensions": "5'0\" X 16'6\"",
+      "width_ft": 5.0,
+      "height_ft": 16.5,
+      "area_sqft": 82.5,
+      "label_pt": {
+        "x": 588.4,
+        "y": 262.0
+      },
+      "walls_px": {
+        "left": 1709,
+        "right": 1826,
+        "top": 689,
+        "bottom": 1006
+      },
+      "span_px": {
+        "width": 117,
+        "height": 317
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "PATIO",
+      "dimensions": "27'6\" X 12'0\"",
+      "width_ft": 27.5,
+      "height_ft": 12.0,
+      "area_sqft": 330.0,
+      "label_pt": {
+        "x": 401.2,
+        "y": 89.9
+      },
+      "walls_px": {
+        "left": 865,
+        "right": 1532,
+        "top": 215,
+        "bottom": 500
+      },
+      "span_px": {
+        "width": 667,
+        "height": 285
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BEDROOM",
+      "dimensions": "12'0\" X 12'0\"",
+      "width_ft": 12.0,
+      "height_ft": 12.0,
+      "area_sqft": 144.0,
+      "label_pt": {
+        "x": 235.4,
+        "y": 112.7
+      },
+      "walls_px": {
+        "left": 558,
+        "right": 846,
+        "top": 288,
+        "bottom": 576
+      },
+      "span_px": {
+        "width": 288,
+        "height": 288
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BEDROOM 2",
+      "dimensions": "12'0\" X 11'6\"",
+      "width_ft": 12.0,
+      "height_ft": 11.5,
+      "area_sqft": 138.0,
+      "label_pt": {
+        "x": 133.1,
+        "y": 239.4
+      },
+      "walls_px": {
+        "left": 252,
+        "right": 540,
+        "top": 668,
+        "bottom": 944
+      },
+      "span_px": {
+        "width": 288,
+        "height": 276
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "BATHROOM",
+      "dimensions": "4'6\" X 8'0\"",
+      "width_ft": 4.5,
+      "height_ft": 8.0,
+      "area_sqft": 36.0,
+      "label_pt": {
+        "x": 249.7,
+        "y": 279.5
+      },
+      "walls_px": {
+        "left": 692,
+        "right": 798,
+        "top": 755,
+        "bottom": 944
+      },
+      "span_px": {
+        "width": 106,
+        "height": 189
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "KITCHEN",
+      "dimensions": "5'6\" X 15'6\"",
+      "width_ft": 5.5,
+      "height_ft": 15.5,
+      "area_sqft": 85.25,
+      "label_pt": {
+        "x": 326.2,
+        "y": 281.2
+      },
+      "walls_px": {
+        "left": 913,
+        "right": 1042,
+        "top": 743,
+        "bottom": 1102
+      },
+      "span_px": {
+        "width": 129,
+        "height": 359
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "CLOSET",
+      "dimensions": "5'0\" X 9'0\"",
+      "width_ft": 5.0,
+      "height_ft": 9.0,
+      "area_sqft": 45.0,
+      "label_pt": {
+        "x": 545.6,
+        "y": 274.2
+      },
+      "walls_px": {
+        "left": 1574,
+        "right": 1691,
+        "top": 766,
+        "bottom": 975
+      },
+      "span_px": {
+        "width": 117,
+        "height": 209
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "GARAGE",
+      "dimensions": "24'6\" X 23'6\"",
+      "width_ft": 24.5,
+      "height_ft": 23.5,
+      "area_sqft": 575.75,
+      "label_pt": {
+        "x": 183.4,
+        "y": 350.5
+      },
+      "walls_px": {
+        "left": 253,
+        "right": 846,
+        "top": 962,
+        "bottom": 1544
+      },
+      "span_px": {
+        "width": 593,
+        "height": 582
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "FOYER",
+      "dimensions": "6'0\" X 6'0\"",
+      "width_ft": 6.0,
+      "height_ft": 6.0,
+      "area_sqft": 36.0,
+      "label_pt": {
+        "x": 488.2,
+        "y": 365.0
+      },
+      "walls_px": {
+        "left": 1390,
+        "right": 1532,
+        "top": 1049,
+        "bottom": 1189
+      },
+      "span_px": {
+        "width": 142,
+        "height": 140
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": false,
+        "bottom": false
+      }
+    },
+    {
+      "name": "LAUNDRY",
+      "dimensions": "4'0\" X 9'6\"",
+      "width_ft": 4.0,
+      "height_ft": 9.5,
+      "area_sqft": 38.0,
+      "label_pt": {
+        "x": 323.0,
+        "y": 402.1
+      },
+      "walls_px": {
+        "left": 914,
+        "right": 1018,
+        "top": 1122,
+        "bottom": 1347
+      },
+      "span_px": {
+        "width": 104,
+        "height": 225
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "OFFICE",
+      "dimensions": "12'6\" X 12'0\"",
+      "width_ft": 12.5,
+      "height_ft": 12.0,
+      "area_sqft": 150.0,
+      "label_pt": {
+        "x": 576.8,
+        "y": 391.3
+      },
+      "walls_px": {
+        "left": 1622,
+        "right": 1875,
+        "top": 1121,
+        "bottom": 1408
+      },
+      "span_px": {
+        "width": 253,
+        "height": 287
+      },
+      "scan_valid": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      }
+    },
+    {
+      "name": "ENTRY",
+      "dimensions": "7'0\" X 5'6\"",
+      "width_ft": 7.0,
+      "height_ft": 5.5,
+      "area_sqft": 38.5,
+      "label_pt": {
+        "x": 492.6,
+        "y": 426.6
+      },
+      "walls_px": {
+        "left": 1390,
+        "right": 1553,
+        "top": 1206,
+        "bottom": 1348
+      },
+      "span_px": {
+        "width": 163,
+        "height": 142
+      },
+      "scan_valid": {
+        "left": false,
+        "right": false,
+        "top": true,
+        "bottom": true
+      }
+    }
+  ],
+  "total_interior_sqft": 2073.8,
+  "processing_time_s": 0.51
+}

@@ -1,0 +1,17 @@
+# PDF extraction
+PyMuPDF
+
+# Image processing
+opencv-python
+numpy
+
+# Computational geometry
+shapely
+
+# Room segmentation (watershed)
+scikit-image
+
+# Web app
+fastapi
+uvicorn[standard]
+python-multipart
