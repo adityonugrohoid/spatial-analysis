@@ -10,7 +10,21 @@ Automated spatial analysis pipeline for architectural floor plan PDFs. Extracts 
 
 <table>
 <tr>
-<td width="50%">
+<td width="33%">
+<img src="inputs/test-2_elements_20260402_205326.png" alt="Extracted Elements" width="100%">
+<p align="center"><em>Extracted PDF elements — lines, fills, curves, rectangles color-coded by type.</em></p>
+</td>
+<td width="33%">
+<img src="inputs/test-2_mask_20260402_205333.png" alt="Wall Mask" width="100%">
+<p align="center"><em>Wall mask exported from web app — 81K wall pixels selected from 2,162 total elements.</em></p>
+</td>
+<td width="33%">
+<img src="inputs/test-2_blueprint_20260402_205331.png" alt="Blueprint Overlay" width="100%">
+<p align="center"><em>Blueprint with selected wall elements overlaid at 3x resolution.</em></p>
+</td>
+</tr>
+<tr>
+<td width="50%" colspan="2">
 <img src="outputs/test-2_annotated_walls.png" alt="Wall Annotations" width="100%">
 <p align="center"><em>Dimension lines with ISO 128 placement on faded PDF base. Adaptive wall detection calibrated at 23.33 px/ft from enclosed rooms.</em></p>
 </td>
