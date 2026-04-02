@@ -96,8 +96,9 @@ const App = (() => {
       doRender();
     });
 
-    // Zoom controls
+    // Zoom controls + pan
     initZoom();
+    initPan();
   }
 
   // ── Zoom ──────────────────────────────────────────────
@@ -159,6 +160,37 @@ const App = (() => {
       canvas.style.height = Math.round(canvas.height * scale) + 'px';
       document.getElementById('zoom-level').textContent = `${Math.round(scale * 100)}%`;
     }
+  }
+
+  // ── Pan (click-hold-drag) ──────────────────────────────
+
+  function initPan() {
+    const wrap = document.getElementById('canvas-wrap');
+    let panning = false;
+    let startX, startY, scrollX0, scrollY0;
+
+    wrap.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      panning = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      scrollX0 = wrap.scrollLeft;
+      scrollY0 = wrap.scrollTop;
+      wrap.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!panning) return;
+      wrap.scrollLeft = scrollX0 - (e.clientX - startX);
+      wrap.scrollTop = scrollY0 - (e.clientY - startY);
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!panning) return;
+      panning = false;
+      wrap.style.cursor = '';
+    });
   }
 
   // ── Upload ─────────────────────────────────────────────
