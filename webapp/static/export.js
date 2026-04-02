@@ -92,35 +92,16 @@ const Export = (() => {
   }
 
   /**
-   * Export wall mask: binary image (white elements on black) + seeds JSON.
+   * Export wall mask: binary image (white elements on black).
    */
   function exportWallMask(appState) {
-    const { flatElements, visibility, source, scaleFactor } = appState;
+    const { flatElements, visibility, source } = appState;
 
-    // Binary mask
     const maskCanvas = Renderer.renderMask(flatElements, visibility);
     maskCanvas.toBlob((blob) => {
       const stem = source.replace(/\.pdf$/i, '');
       download(blob, `${stem}_mask_${timestamp()}.png`);
     }, 'image/png');
-
-    // Seeds JSON: visible text elements with pixel positions
-    const seeds = [];
-    for (let i = 0; i < flatElements.length; i++) {
-      if (!visibility[i]) continue;
-      const elem = flatElements[i].elem;
-      if (elem.type !== 'text' || !elem.label) continue;
-      const pts = elem.points;
-      if (pts.length < 2) continue;
-      // Center of bounding box
-      const cx = Math.round(((pts[0].x + pts[1].x) / 2) * scaleFactor);
-      const cy = Math.round(((pts[0].y + pts[1].y) / 2) * scaleFactor);
-      seeds.push({ label: elem.label, x_px: cx, y_px: cy });
-    }
-
-    const seedsBlob = new Blob([JSON.stringify({ seeds }, null, 2)], { type: 'application/json' });
-    const stem = source.replace(/\.pdf$/i, '');
-    download(seedsBlob, `${stem}_seeds_${timestamp()}.json`);
   }
 
   return { exportJSON, exportPNGElements, exportPNGBlueprint, exportWallMask };

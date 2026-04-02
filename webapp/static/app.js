@@ -69,11 +69,6 @@ const App = (() => {
       dropdown.classList.remove('open');
       Export.exportPNGBlueprint(getExportState());
     });
-    document.getElementById('export-mask').addEventListener('click', () => {
-      dropdown.classList.remove('open');
-      Export.exportWallMask(getExportState());
-    });
-
     // Reset
     document.getElementById('reset-btn').addEventListener('click', () => {
       if (!visibility) return;
