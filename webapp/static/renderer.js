@@ -14,6 +14,8 @@ const Renderer = (() => {
   let scaleFactor = 3;
   let canvasW = 0, canvasH = 0;
   let renderPending = false;
+  let exportMode = false;  // true during offscreen export — strips decorative borders
+  const imageCache = new Map();  // elem index -> HTMLImageElement
 
   // Draw order: fills first, then strokes thin-to-thick
   const STROKE_ORDER = [
@@ -48,6 +50,28 @@ const Renderer = (() => {
       };
       img.src = dataUri;
     });
+  }
+
+  /**
+   * Preload image data URIs from extracted elements into HTMLImageElements.
+   * @param {Array} flatElements - flat array of {elem, groupName, globalIndex}
+   */
+  function preloadImages(flatElements) {
+    imageCache.clear();
+    const promises = [];
+    for (let i = 0; i < flatElements.length; i++) {
+      const elem = flatElements[i].elem;
+      if (elem.type === 'image' && elem.image_data) {
+        const p = new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => { imageCache.set(i, img); resolve(); };
+          img.onerror = () => resolve();
+          img.src = elem.image_data;
+        });
+        promises.push(p);
+      }
+    }
+    return Promise.all(promises);
   }
 
   function setBlueprintVisible(visible) {
@@ -85,13 +109,16 @@ const Renderer = (() => {
       ctx.fillRect(0, 0, canvasW, canvasH);
     }
 
-    // Separate fills from strokes
+    // Separate into layers: images (raster, bottom) → fills → strokes (top)
+    const images = [];
     const fills = [];
     const strokes = [];
     for (let i = 0; i < flatElements.length; i++) {
       if (!visibility[i]) continue;
       const fe = flatElements[i];
-      if (fe.elem.type === 'fill') {
+      if (fe.elem.type === 'image') {
+        images.push({ fe, color: elementColors[i] });
+      } else if (fe.elem.type === 'fill') {
         fills.push({ fe, color: elementColors[i] });
       } else {
         strokes.push({ fe, color: elementColors[i] });
@@ -101,18 +128,23 @@ const Renderer = (() => {
     // Sort strokes: thin lines first, thick last
     strokes.sort((a, b) => (a.fe.elem.width || 0) - (b.fe.elem.width || 0));
 
-    // Pass 1: fills
-    for (const { fe, color } of fills) {
-      drawElement(fe.elem, color);
+    // Pass 1: images (raster bottom layer)
+    for (const { fe, color } of images) {
+      drawElement(fe.elem, color, fe.globalIndex);
     }
 
-    // Pass 2: strokes (thin to thick)
+    // Pass 2: fills (on top of images)
+    for (const { fe, color } of fills) {
+      drawElement(fe.elem, color, fe.globalIndex);
+    }
+
+    // Pass 3: strokes (thin to thick)
     for (const { fe, color } of strokes) {
-      drawElement(fe.elem, color);
+      drawElement(fe.elem, color, fe.globalIndex);
     }
   }
 
-  function drawElement(elem, groupColor) {
+  function drawElement(elem, groupColor, globalIndex) {
     const pts = elem.points;
     if (!pts || pts.length < 2) return;
 
@@ -120,7 +152,11 @@ const Renderer = (() => {
     const thicknessBoost = blueprintVisible ? 1 : 0;
 
     let color;
-    if (groupColor) {
+    if (exportMode) {
+      // Export: always use original PDF colors for faithful reconstruction
+      const c = elem.color || [0, 0, 0];
+      color = `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+    } else if (groupColor) {
       color = `rgb(${groupColor.r}, ${groupColor.g}, ${groupColor.b})`;
     } else {
       const c = elem.color || [0, 0, 0];
@@ -141,7 +177,9 @@ const Renderer = (() => {
       case 'fill': {
         const fc = elem.fill || elem.color || [0, 0, 0];
         let fillColor;
-        if (groupColor) {
+        if (exportMode) {
+          fillColor = `rgb(${fc[0]}, ${fc[1]}, ${fc[2]})`;
+        } else if (groupColor) {
           fillColor = `rgba(${groupColor.r}, ${groupColor.g}, ${groupColor.b}, 0.7)`;
         } else {
           fillColor = `rgb(${fc[0]}, ${fc[1]}, ${fc[2]})`;
@@ -154,10 +192,12 @@ const Renderer = (() => {
         }
         ctx.closePath();
         ctx.fill();
-        // Outline
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        if (!exportMode) {
+          // Outline (interactive only)
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
         break;
       }
 
@@ -207,16 +247,31 @@ const Renderer = (() => {
       }
 
       case 'text': {
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
         const x1 = pxPts[0][0], y1 = pxPts[0][1];
         const x2 = pxPts[1][0], y2 = pxPts[1][1];
-        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+        const tw = x2 - x1, th = y2 - y1;
+        const textRot = (elem.text_angle || 0) * Math.PI / 180;
+        // Use origin (baseline insertion point) for accurate positioning
+        const ox = elem.origin ? elem.origin.x * scaleFactor : x1;
+        const oy = elem.origin ? elem.origin.y * scaleFactor : y2;
+        if (!exportMode) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x1, y1, tw, th);
+        }
         if (elem.label) {
-          const fontSize = Math.max(8, (elem.font_size || 6) * scaleFactor);
+          const fontSize = Math.max(4, (elem.font_size || 6) * scaleFactor);
           ctx.fillStyle = color;
           ctx.font = `${fontSize}px sans-serif`;
-          ctx.fillText(elem.label, x1, y2 - 2);
+          if (Math.abs(textRot) > 0.01) {
+            ctx.save();
+            ctx.translate(ox, oy);
+            ctx.rotate(textRot);
+            ctx.fillText(elem.label, 0, 0);
+            ctx.restore();
+          } else {
+            ctx.fillText(elem.label, ox, oy);
+          }
         }
         break;
       }
@@ -224,35 +279,64 @@ const Renderer = (() => {
       case 'image': {
         const ix1 = pxPts[0][0], iy1 = pxPts[0][1];
         const ix2 = pxPts[1][0], iy2 = pxPts[1][1];
-        ctx.strokeStyle = 'rgba(128, 0, 128, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 3]);
-        ctx.strokeRect(ix1, iy1, ix2 - ix1, iy2 - iy1);
-        ctx.setLineDash([]);
-        ctx.fillStyle = 'rgba(128, 0, 128, 0.1)';
-        ctx.fillRect(ix1, iy1, ix2 - ix1, iy2 - iy1);
-        if (elem.label) {
-          ctx.fillStyle = 'rgba(128, 0, 128, 0.8)';
-          ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
-          ctx.fillText(elem.label, ix1 + 4, iy1 + 14);
+        const iw = ix2 - ix1, ih = iy2 - iy1;
+        // Draw actual image with per-image CTM (rotation + optional h-flip)
+        const cachedImg = imageCache.get(globalIndex);
+        if (cachedImg) {
+          const rot = (elem.img_rotation || 0) * Math.PI / 180;
+          const flipH = elem.img_flip_h || false;
+          const needsTransform = Math.abs(rot) > 0.01 || flipH;
+          if (needsTransform) {
+            ctx.save();
+            const cx = ix1 + iw / 2, cy = iy1 + ih / 2;
+            ctx.translate(cx, cy);
+            if (flipH) ctx.scale(-1, 1);
+            if (Math.abs(rot) > 0.01) ctx.rotate(rot);
+            // Swap draw dimensions for ±90° rotation
+            const absAngle = Math.abs(elem.img_rotation || 0);
+            if (absAngle > 45 && absAngle < 135) {
+              ctx.drawImage(cachedImg, -ih / 2, -iw / 2, ih, iw);
+            } else {
+              ctx.drawImage(cachedImg, -iw / 2, -ih / 2, iw, ih);
+            }
+            ctx.restore();
+          } else {
+            ctx.drawImage(cachedImg, ix1, iy1, iw, ih);
+          }
+        } else if (!exportMode) {
+          // Fallback: placeholder box + border (interactive only)
+          ctx.fillStyle = 'rgba(128, 0, 128, 0.1)';
+          ctx.fillRect(ix1, iy1, iw, ih);
+          ctx.strokeStyle = 'rgba(128, 0, 128, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 3]);
+          ctx.strokeRect(ix1, iy1, iw, ih);
+          ctx.setLineDash([]);
+          if (elem.label) {
+            ctx.fillStyle = 'rgba(128, 0, 128, 0.8)';
+            ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
+            ctx.fillText(elem.label, ix1 + 4, iy1 + 14);
+          }
         }
         break;
       }
 
       case 'table': {
-        const tx1 = pxPts[0][0], ty1 = pxPts[0][1];
-        const tx2 = pxPts[1][0], ty2 = pxPts[1][1];
-        ctx.strokeStyle = 'rgba(0, 128, 64, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([4, 4]);
-        ctx.strokeRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
-        ctx.setLineDash([]);
-        ctx.fillStyle = 'rgba(0, 128, 64, 0.1)';
-        ctx.fillRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
-        if (elem.label) {
-          ctx.fillStyle = 'rgba(0, 128, 64, 0.8)';
-          ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
-          ctx.fillText(elem.label, tx1 + 4, ty1 + 14);
+        if (!exportMode) {
+          const tx1 = pxPts[0][0], ty1 = pxPts[0][1];
+          const tx2 = pxPts[1][0], ty2 = pxPts[1][1];
+          ctx.strokeStyle = 'rgba(0, 128, 64, 0.8)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([4, 4]);
+          ctx.strokeRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
+          ctx.setLineDash([]);
+          ctx.fillStyle = 'rgba(0, 128, 64, 0.1)';
+          ctx.fillRect(tx1, ty1, tx2 - tx1, ty2 - ty1);
+          if (elem.label) {
+            ctx.fillStyle = 'rgba(0, 128, 64, 0.8)';
+            ctx.font = `${Math.max(10, 4 * scaleFactor)}px sans-serif`;
+            ctx.fillText(elem.label, tx1 + 4, ty1 + 14);
+          }
         }
         break;
       }
@@ -286,23 +370,32 @@ const Renderer = (() => {
     const savedBlueprint = blueprintVisible;
     ctx = offCtx;
     blueprintVisible = withBackground;
+    exportMode = true;
 
+    const images = [];
     const fills = [];
     const strokes = [];
+    const texts = [];
     for (let i = 0; i < flatElements.length; i++) {
       if (!visibility[i]) continue;
       const fe = flatElements[i];
       const color = elementColors[i];
-      if (fe.elem.type === 'fill') fills.push({ fe, color });
+      if (fe.elem.type === 'image') images.push({ fe, color });
+      else if (fe.elem.type === 'fill') fills.push({ fe, color });
+      else if (fe.elem.type === 'text' || fe.elem.type === 'table') texts.push({ fe, color });
       else strokes.push({ fe, color });
     }
     strokes.sort((a, b) => (a.fe.elem.width || 0) - (b.fe.elem.width || 0));
 
-    for (const { fe, color } of fills) drawElement(fe.elem, color);
-    for (const { fe, color } of strokes) drawElement(fe.elem, color);
+    // Export order: images → fills → strokes → text
+    for (const { fe, color } of images) drawElement(fe.elem, color, fe.globalIndex);
+    for (const { fe, color } of fills) drawElement(fe.elem, color, fe.globalIndex);
+    for (const { fe, color } of strokes) drawElement(fe.elem, color, fe.globalIndex);
+    for (const { fe, color } of texts) drawElement(fe.elem, color, fe.globalIndex);
 
     ctx = savedCtx;
     blueprintVisible = savedBlueprint;
+    exportMode = false;
     return offCanvas;
   }
 
@@ -383,6 +476,20 @@ const Renderer = (() => {
           offCtx.stroke();
           break;
 
+        case 'image': {
+          offCtx.fillStyle = white;
+          offCtx.fillRect(pxPts[0][0], pxPts[0][1],
+            pxPts[1][0] - pxPts[0][0], pxPts[1][1] - pxPts[0][1]);
+          break;
+        }
+
+        case 'table': {
+          offCtx.fillStyle = white;
+          offCtx.fillRect(pxPts[0][0], pxPts[0][1],
+            pxPts[1][0] - pxPts[0][0], pxPts[1][1] - pxPts[0][1]);
+          break;
+        }
+
         // text: skip in mask (no text rendering in binary mask)
       }
     }
@@ -408,7 +515,7 @@ const Renderer = (() => {
   }
 
   return {
-    init, setPage, loadBackground,
+    init, setPage, loadBackground, preloadImages,
     setBlueprintVisible, isBlueprintVisible,
     renderDirect, requestRender,
     renderOffscreen, renderMask,

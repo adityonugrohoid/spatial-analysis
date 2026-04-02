@@ -95,6 +95,70 @@ const App = (() => {
       rebuildUI();
       doRender();
     });
+
+    // Zoom controls
+    initZoom();
+  }
+
+  // ── Zoom ──────────────────────────────────────────────
+
+  const ZOOM_STEPS = [0.1, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5];
+  let currentZoomIdx = -1;  // -1 = fit mode
+
+  function initZoom() {
+    const wrap = document.getElementById('canvas-wrap');
+
+    document.getElementById('zoom-in-btn').addEventListener('click', () => stepZoom(1));
+    document.getElementById('zoom-out-btn').addEventListener('click', () => stepZoom(-1));
+    document.getElementById('zoom-fit-btn').addEventListener('click', () => {
+      currentZoomIdx = -1;
+      applyZoom();
+    });
+
+    // Mouse wheel zoom (Ctrl+scroll or plain scroll)
+    wrap.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      stepZoom(e.deltaY < 0 ? 1 : -1);
+    }, { passive: false });
+
+    applyZoom();
+  }
+
+  function stepZoom(dir) {
+    if (currentZoomIdx === -1) {
+      // Leaving fit mode — find closest step to current fit scale
+      const canvas = document.getElementById('canvas');
+      const fitScale = canvas.clientWidth / (canvas.width || 1);
+      currentZoomIdx = ZOOM_STEPS.findIndex(s => s >= fitScale - 0.01);
+      if (currentZoomIdx === -1) currentZoomIdx = ZOOM_STEPS.length - 1;
+    }
+    currentZoomIdx = Math.max(0, Math.min(ZOOM_STEPS.length - 1, currentZoomIdx + dir));
+    applyZoom();
+  }
+
+  function applyZoom() {
+    const canvas = document.getElementById('canvas');
+    if (!canvas.width) return;
+
+    if (currentZoomIdx === -1) {
+      // Fit mode: let CSS constrain
+      canvas.style.width = '';
+      canvas.style.height = '';
+      const wrap = document.getElementById('canvas-wrap');
+      const maxW = wrap.clientWidth - 16;
+      const maxH = wrap.clientHeight - 16;
+      const scaleW = maxW / canvas.width;
+      const scaleH = maxH / canvas.height;
+      const fitScale = Math.min(scaleW, scaleH, 1);
+      canvas.style.width = Math.round(canvas.width * fitScale) + 'px';
+      canvas.style.height = Math.round(canvas.height * fitScale) + 'px';
+      document.getElementById('zoom-level').textContent = 'Fit';
+    } else {
+      const scale = ZOOM_STEPS[currentZoomIdx];
+      canvas.style.width = Math.round(canvas.width * scale) + 'px';
+      canvas.style.height = Math.round(canvas.height * scale) + 'px';
+      document.getElementById('zoom-level').textContent = `${Math.round(scale * 100)}%`;
+    }
   }
 
   // ── Upload ─────────────────────────────────────────────
@@ -132,8 +196,9 @@ const App = (() => {
       await Renderer.loadBackground(rawData.background_png);
     }
 
-    // Build flat element list
+    // Build flat element list and preload embedded images
     buildFlatElements();
+    await Renderer.preloadImages(flatElements);
 
     // Enable buttons
     document.getElementById('blueprint-btn').disabled = false;
@@ -147,6 +212,7 @@ const App = (() => {
     buildElementColors();
     rebuildUI();
     doRender();
+    applyZoom();
 
     showLoading(false);
     const total = flatElements.length;
