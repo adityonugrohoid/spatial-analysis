@@ -2,7 +2,7 @@
 
 # Spatial Analysis
 
-[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -174,7 +174,7 @@ The FastAPI backend exposes a single endpoint (`POST /api/extract`) that accepts
 
 ### 3. Wall Annotation (`src/annotate_walls.py`)
 
-Reads the exported wall mask PNG. A band scanner (+-60px) walks each room boundary to locate wall edges, validated against expected distances with 20% tolerance. Pixel-per-foot calibration uses a robust median across multiple enclosed rooms (BEDROOM, BEDROOM 2, OFFICE) with outlier rejection. Dimension lines follow ISO 128 / ANSI Y14.5 style: arrowheads at 10px length, extension lines with 3px gap and 5px overshoot. A per-room placement table controls line position (outside vs. negative/inside offset). Output: annotated PNG, 2-page PDF with room schedule, JSON with wall boundaries and scan validation flags.
+Reads the exported wall mask PNG. A band scanner (+-60px) walks each room boundary to locate wall edges, validated against expected distances with 20% tolerance. Pixel-per-foot calibration uses a median across multiple enclosed rooms (BEDROOM, BEDROOM 2, OFFICE) with outlier rejection. Dimension lines follow ISO 128 / ANSI Y14.5 style: arrowheads at 10px length, extension lines with 3px gap and 5px overshoot. A per-room placement table controls line position (outside vs. negative/inside offset). Output: annotated PNG, 2-page PDF with room schedule, JSON with wall boundaries and scan validation flags.
 
 ### 4. Watershed Room Segmentation (`src/watershed_rooms.py`)
 
